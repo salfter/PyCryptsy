@@ -1,3 +1,5 @@
+# coding=iso-8859-1
+
 # PyCryptsy Example
 #
 # Copyright © 2013 Scott Alfter

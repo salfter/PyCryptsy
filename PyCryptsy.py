@@ -1,3 +1,5 @@
+# coding=iso-8859-1
+
 # PyCryptsy: a Python binding to the Cryptsy API
 #
 # Copyright © 2013 Scott Alfter
