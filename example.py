@@ -35,24 +35,14 @@ dest="BTC"
 
 multiplier=1.01
 
-# get market ID
+# get target price
 
-result = api.Query("getmarkets", {});
-for i, market in enumerate(result["return"]):
-  if market["primary_currency_code"]==src and market["secondary_currency_code"]==dest:
-    mkt_id=market["marketid"]
-
-# get target 
-
-result = api.Query("marketorders", {"marketid": mkt_id})
-target=float(result["return"]["buyorders"][0]["buyprice"])*multiplier
+target=api.GetBuyPrice(src, dest)*multiplier
 
 # get available balance
 
-result = api.Query("getinfo", {});
-avail=float(result["return"]["balances_available"][src])
+avail=api.GetAvailableBalance(src)
 
 # trade 10% of available balance
 
-result=api_query("createorder", {"marketid": mkt_id, "ordertype": "Sell", "quantity": avail/10, "price": target})
-print result
+print api.CreateSellOrder(src, dest, avail/10, target)

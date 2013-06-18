@@ -70,3 +70,31 @@ class PyCryptsy:
     except:
       raise Exception("unable to decode response")
     return rtnval
+
+  # get market ID
+  def GetMarketID (self, src, dest):
+    r=self.Query("getmarkets", {})
+    for i, market in enumerate(r["return"]):
+      if market["primary_currency_code"].upper()==src.upper() and market["secondary_currency_code"].upper()==dest.upper():
+        mkt_id=market["marketid"]
+    return mkt_id
+    
+  # get buy price for a currency pair
+  def GetBuyPrice (self, src, dest):
+    r=self.Query("marketorders", {"marketid": self.GetMarketID(src, dest)})
+    return float(r["return"]["buyorders"][0]["buyprice"])
+
+  # get sell price for a currency pair
+  def GetSellPrice (self, src, dest):
+    r=self.Query("marketorders", {"marketid": self.GetMarketID(src, dest)})
+    return float(r["return"]["sellorders"][0]["sellprice"])
+
+  # get available balance for a currency
+  def GetAvailableBalance (self, curr):
+    r=self.Query("getinfo", {})
+    return float(r["return"]["balances_available"][curr])
+        
+  # create a sell order
+  def CreateSellOrder (self, src, dest, qty, price):
+    return self.Query("createorder", {"marketid": self.GetMarketID(src, dest), "ordertype": "Sell", "quantity": qty, "price": price})
+    
