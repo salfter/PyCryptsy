@@ -92,7 +92,7 @@ class PyCryptsy:
   # get available balance for a currency
   def GetAvailableBalance (self, curr):
     r=self.Query("getinfo", {})
-    return float(r["return"]["balances_available"][curr])
+    return float(r["return"]["balances_available"][curr.upper()])
         
   # create a sell order
   def CreateSellOrder (self, src, dest, qty, price):
