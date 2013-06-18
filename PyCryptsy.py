@@ -53,9 +53,12 @@ class PyCryptsy:
     # curl handle
     b=StringIO.StringIO()
     ch=pycurl.Curl()
-    ch.setopt(pycurl.URL, "https://www.cryptsy.com/api")
-    ch.setopt(pycurl.POSTFIELDS, post_data)
-    ch.setopt(pycurl.HTTPHEADER, headers)
+    if method=="marketdata" or method=="orderdata": # public methods
+      ch.setopt(pycurl.URL, "https://www.cryptsy.com/api.php?method="+method)
+    else: # authenticated methods
+      ch.setopt(pycurl.URL, "https://www.cryptsy.com/api")
+      ch.setopt(pycurl.POSTFIELDS, post_data)
+      ch.setopt(pycurl.HTTPHEADER, headers)
     ch.setopt(pycurl.SSL_VERIFYPEER, 0)
     ch.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
