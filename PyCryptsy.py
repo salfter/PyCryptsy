@@ -82,17 +82,26 @@ class PyCryptsy:
   # get buy price for a currency pair
   def GetBuyPrice (self, src, dest):
     r=self.Query("marketorders", {"marketid": self.GetMarketID(src, dest)})
-    return float(r["return"]["buyorders"][0]["buyprice"])
+    try:
+      return float(r["return"]["buyorders"][0]["buyprice"])
+    except:
+      return 0
 
   # get sell price for a currency pair
   def GetSellPrice (self, src, dest):
     r=self.Query("marketorders", {"marketid": self.GetMarketID(src, dest)})
-    return float(r["return"]["sellorders"][0]["sellprice"])
+    try:
+      return float(r["return"]["sellorders"][0]["sellprice"])
+    except:
+      return 0
 
   # get available balance for a currency
   def GetAvailableBalance (self, curr):
     r=self.Query("getinfo", {})
-    return float(r["return"]["balances_available"][curr.upper()])
+    try:
+      return float(r["return"]["balances_available"][curr.upper()])
+    except:
+      return 0
         
   # create a sell order
   def CreateSellOrder (self, src, dest, qty, price):
