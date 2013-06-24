@@ -53,12 +53,9 @@ class PyCryptsy:
     # curl handle
     b=StringIO.StringIO()
     ch=pycurl.Curl()
-    if method=="marketdata" or method=="orderdata": # public methods
-      ch.setopt(pycurl.URL, "https://www.cryptsy.com/api.php?method="+method)
-    else: # authenticated methods
-      ch.setopt(pycurl.URL, "https://www.cryptsy.com/api")
-      ch.setopt(pycurl.POSTFIELDS, post_data)
-      ch.setopt(pycurl.HTTPHEADER, headers)
+    ch.setopt(pycurl.URL, "https://www.cryptsy.com/api")
+    ch.setopt(pycurl.POSTFIELDS, post_data)
+    ch.setopt(pycurl.HTTPHEADER, headers)
     ch.setopt(pycurl.SSL_VERIFYPEER, 0)
     ch.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
@@ -74,7 +71,7 @@ class PyCryptsy:
       raise Exception("unable to decode response")
     return rtnval
 
-  # get market ID
+  # get market ID (return None if not found)
   def GetMarketID (self, src, dest):
     r=self.Query("getmarkets", {})
     for i, market in enumerate(r["return"]):
@@ -108,5 +105,7 @@ class PyCryptsy:
         
   # create a sell order
   def CreateSellOrder (self, src, dest, qty, price):
-    return self.Query("createorder", {"marketid": self.GetMarketID(src, dest), "ordertype": "Sell", "quantity": qty, "price": price})
-    
+    try:
+      return self.Query("createorder", {"marketid": self.GetMarketID(src, dest), "ordertype": "Sell", "quantity": qty, "price": price})
+    except:
+      return 0
