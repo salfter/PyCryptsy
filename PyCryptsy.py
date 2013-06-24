@@ -81,7 +81,10 @@ class PyCryptsy:
     
   # get buy price for a currency pair
   def GetBuyPrice (self, src, dest):
-    r=self.Query("marketorders", {"marketid": self.GetMarketID(src, dest)})
+    mktid = self.GetMarketID(src, dest)
+    if mktid is None:
+      return 0
+    r=self.Query("marketorders", {"marketid": mktid})
     try:
       return float(r["return"]["buyorders"][0]["buyprice"])
     except:
@@ -89,7 +92,10 @@ class PyCryptsy:
 
   # get sell price for a currency pair
   def GetSellPrice (self, src, dest):
-    r=self.Query("marketorders", {"marketid": self.GetMarketID(src, dest)})
+    mktid = self.GetMarketID(src, dest)
+    if mktid is None:
+      return 0
+    r=self.Query("marketorders", {"marketid": mktid})
     try:
       return float(r["return"]["sellorders"][0]["sellprice"])
     except:
