@@ -114,4 +114,11 @@ class PyCryptsy:
     try:
       return self.Query("createorder", {"marketid": self.GetMarketID(src, dest), "ordertype": "Sell", "quantity": qty, "price": price})
     except:
-      return 0
+      return None
+
+  # create a buy order
+  def CreateBuyOrder (self, src, dest, qty, price):
+    try:
+      return self.Query("createorder", {"marketid": self.GetMarketID(src, dest), "ordertype": "Buy", "quantity": qty, "price": price})
+    except:
+      return None
