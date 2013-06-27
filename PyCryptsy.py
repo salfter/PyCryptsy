@@ -73,19 +73,22 @@ class PyCryptsy:
 
   # get market ID (return None if not found)
   def GetMarketID (self, src, dest):
-    r=self.Query("getmarkets", {})
-    for i, market in enumerate(r["return"]):
-      if market["primary_currency_code"].upper()==src.upper() and market["secondary_currency_code"].upper()==dest.upper():
-        mkt_id=market["marketid"]
-    return mkt_id
+    try:
+      r=self.Query("getmarkets", {})
+      for i, market in enumerate(r["return"]):
+        if market["primary_currency_code"].upper()==src.upper() and market["secondary_currency_code"].upper()==dest.upper():
+          mkt_id=market["marketid"]
+      return mkt_id
+    except:
+      return None
     
   # get buy price for a currency pair
   def GetBuyPrice (self, src, dest):
     mktid = self.GetMarketID(src, dest)
     if mktid is None:
       return 0
-    r=self.Query("marketorders", {"marketid": mktid})
     try:
+      r=self.Query("marketorders", {"marketid": mktid})
       return float(r["return"]["buyorders"][0]["buyprice"])
     except:
       return 0
@@ -95,16 +98,16 @@ class PyCryptsy:
     mktid = self.GetMarketID(src, dest)
     if mktid is None:
       return 0
-    r=self.Query("marketorders", {"marketid": mktid})
     try:
+      r=self.Query("marketorders", {"marketid": mktid})
       return float(r["return"]["sellorders"][0]["sellprice"])
     except:
       return 0
 
   # get available balance for a currency
   def GetAvailableBalance (self, curr):
-    r=self.Query("getinfo", {})
     try:
+      r=self.Query("getinfo", {})
       return float(r["return"]["balances_available"][curr.upper()])
     except:
       return 0
