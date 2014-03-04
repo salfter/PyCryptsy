@@ -53,7 +53,7 @@ class PyCryptsy:
     # curl handle
     b=StringIO.StringIO()
     ch=pycurl.Curl()
-    ch.setopt(pycurl.URL, "https://www.cryptsy.com/api")
+    ch.setopt(pycurl.URL, "https://api.cryptsy.com/api")
     ch.setopt(pycurl.POSTFIELDS, post_data)
     ch.setopt(pycurl.HTTPHEADER, headers)
     ch.setopt(pycurl.SSL_VERIFYPEER, 0)
