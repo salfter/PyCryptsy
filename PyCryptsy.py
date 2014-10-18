@@ -2,7 +2,7 @@
 
 # PyCryptsy: a Python binding to the Cryptsy API
 #
-# Copyright © 2013 Scott Alfter
+# Copyright © 2013-2014 Scott Alfter
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -82,6 +82,18 @@ class PyCryptsy:
     except:
       return None
     
+  # get market IDs for a destination currency
+  def GetMarketIDs (self, dest):
+    try:
+      rtnval={}
+      r=self.Query("getmarkets", {})
+      for i, market in enumerate(r["return"]):
+        if market["secondary_currency_code"].upper()==dest.upper():
+          rtnval[market["primary_currency_code"].upper()]=market["marketid"]
+      return rtnval
+    except:
+      return None
+    
   # get buy price for a currency pair
   def GetBuyPrice (self, src, dest):
     mktid = self.GetMarketID(src, dest)
@@ -98,6 +110,22 @@ class PyCryptsy:
     mktid = self.GetMarketID(src, dest)
     if mktid is None:
       return 0
+    try:
+      r=self.Query("marketorders", {"marketid": mktid})
+      return float(r["return"]["sellorders"][0]["sellprice"])
+    except:
+      return 0
+
+  # get buy price for a market ID
+  def GetBuyPriceByID (self, mktid):
+    try:
+      r=self.Query("marketorders", {"marketid": mktid})
+      return float(r["return"]["buyorders"][0]["buyprice"])
+    except:
+      return 0
+
+  # get sell price for a market ID
+  def GetSellPriceByID (self, mktid):
     try:
       r=self.Query("marketorders", {"marketid": mktid})
       return float(r["return"]["sellorders"][0]["sellprice"])
