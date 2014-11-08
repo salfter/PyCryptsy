@@ -94,7 +94,6 @@ class PyCryptsy:
     try:
       rtnval=json.loads(b.getvalue())
     except:
-      print b.getvalue()
       raise Exception("unable to decode response")
     return rtnval
 
