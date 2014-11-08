@@ -72,6 +72,32 @@ class PyCryptsy:
       raise Exception("unable to decode response")
     return rtnval
 
+  # issue any supported public query (method: string, req: dictionary with method paramet ers)
+  def PublicQuery(self, method, req):
+    # build URL
+    url="http://pubapi.cryptsy.com/api.php?method="+method
+    for i, opt in enumerate(req):
+      url+="&"+str(opt)+"="+str(req[opt])
+    # curl handle
+    b=StringIO.StringIO()
+    ch=pycurl.Curl()
+    ch.setopt(pycurl.URL, url)
+    ch.setopt(pycurl.SSL_VERIFYPEER, 0)
+    ch.setopt(pycurl.WRITEFUNCTION, b.write)
+    try:
+      ch.perform()
+    except pycurl.error, error:
+      errno, errstr=error
+      raise Exception("pycurl error: "+errstr)
+  
+    # decode and return
+    try:
+      rtnval=json.loads(b.getvalue())
+    except:
+      print b.getvalue()
+      raise Exception("unable to decode response")
+    return rtnval
+
   # get market ID (return None if not found)
   def GetMarketID (self, src, dest):
     try:
